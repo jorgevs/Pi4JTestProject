@@ -26,8 +26,8 @@ public class BlinkGpioExample {
         final GpioController gpio = GpioFactory.getInstance();
 
         // provision gpio pin #01 & #03 as an output pins and blink
-        final GpioPinDigitalOutput led1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_13);
-        final GpioPinDigitalOutput led2 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_26);
+        final GpioPinDigitalOutput led1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_26);
+        final GpioPinDigitalOutput led2 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_27);
 
         // provision gpio pin #02 as an input pin with its internal pull down resistor enabled
         //final GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
@@ -64,5 +64,3 @@ public class BlinkGpioExample {
         // gpio.shutdown();   <--- implement this method call if you wish to terminate the Pi4J GPIO controller
     }
 }
-
-//END SNIPPET: blink-gpio-snippet
