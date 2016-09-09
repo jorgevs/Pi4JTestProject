@@ -25,30 +25,30 @@ public class BlinkGpioExample {
         // create gpio controller
         final GpioController gpio = GpioFactory.getInstance();
 
-        // provision gpio pin #01 & #03 as an output pins and blink
+        // provision gpio pin #26 & #27 as an output pins and blink
         final GpioPinDigitalOutput led1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_26);
         final GpioPinDigitalOutput led2 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_27);
 
         // provision gpio pin #02 as an input pin with its internal pull down resistor enabled
-        //final GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
+        final GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
 
         // create and register gpio pin listener
-        /*myButton.addListener(new GpioPinListenerDigital() {
+        myButton.addListener(new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-                // when button is pressed, speed up the blink rate on LED #2
+                // when button is pressed, speed up the blink rate on led2
                 if (event.getState().isHigh()) {
                     led2.blink(200);
                 } else {
                     led2.blink(1000);
                 }
             }
-        });*/
+        });
 
-        // continuously blink the led every 1/2 second for 15 seconds
+        // continuously blink the led1 every 1/2 second for 15 seconds
         led1.blink(500, 15000);
 
-        // continuously blink the led every 1 second
+        // continuously blink the led2 every 1 second
         led2.blink(1000);
 
         System.out.println(" ... the LED will continue blinking until the program is terminated.");
