@@ -24,34 +24,41 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 	private static final int LCD_DISPLAYCONTROL = 0x08;
 	private static final int LCD_CURSORSHIFT = 0x10;
 	private static final int LCD_FUNCTIONSET = 0x20;
+	
 	private static final int LCD_SETCGRAMADDR = 0x40;
 	private static final int LCD_SETDDRAMADDR = 0x80;
 
 	// flags for display entry mode
 	private static final int LCD_ENTRYRIGHT = 0x00;
 	private static final int LCD_ENTRYLEFT = 0x02;
+	
 	private static final int LCD_ENTRYSHIFTINCREMENT = 0x01;
 	private static final int LCD_ENTRYSHIFTDECREMENT = 0x00;
 
 	// flags for display on/off control
 	private static final int LCD_DISPLAYON = 0x04;
 	private static final int LCD_DISPLAYOFF = 0x00;
+	
 	private static final int LCD_CURSORON = 0x02;
 	private static final int LCD_CURSOROFF = 0x00;
+	
 	private static final int LCD_BLINKON = 0x01;
 	private static final int LCD_BLINKOFF = 0x00;
 
 	// flags for display/cursor shift
 	private static final int LCD_DISPLAYMOVE = 0x08;
 	private static final int LCD_CURSORMOVE = 0x00;
+	
 	private static final int LCD_MOVERIGHT = 0x04;
 	private static final int LCD_MOVELEFT = 0x00;
 
 	// flags for function set
 	private static final int LCD_8BITMODE = 0x10;
 	private static final int LCD_4BITMODE = 0x00;
+	
 	private static final int LCD_2LINE = 0x08;
 	private static final int LCD_1LINE = 0x00;
+	
 	private static final int LCD_5x10DOTS = 0x04;
 	private static final int LCD_5x8DOTS = 0x00;
 	
@@ -71,19 +78,19 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
     private final int[] LCD_LINE_ADDRESS = { 0x80, 0xC0, 0x94, 0xD4 };
     
 
-	public NewI2CLcdDisplay(int rows, int columns, int busNumber, int address) throws UnsupportedBusNumberException, IOException {		
+	public NewI2CLcdDisplay(int rows, int columns, int busNumber, int address) throws UnsupportedBusNumberException, IOException, InterruptedException {		
 		this(I2CFactory.getInstance(busNumber), address);
 		this.rows = rows;
 		this.columns = columns;
 	}
 	
-    public NewI2CLcdDisplay(int busNumber, int address) throws UnsupportedBusNumberException, IOException {
+    public NewI2CLcdDisplay(int busNumber, int address) throws UnsupportedBusNumberException, IOException, InterruptedException {
 		this(I2CFactory.getInstance(busNumber), address);
 		this.rows = 2;
 		this.columns = 16;
 	}
 
-	public NewI2CLcdDisplay(I2CBus bus, int address) throws IOException {
+	public NewI2CLcdDisplay(I2CBus bus, int address) throws IOException, InterruptedException {
 		// create I2C communications bus instance
 		this.bus = bus; // 1
 		// create I2C device instance
@@ -94,8 +101,9 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 	/**
 	 * Initialize the LCD. 
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */
-	private void init() throws IOException {
+	private void init() throws IOException, InterruptedException {
 		device.write((byte) 0x03);
 		device.write((byte) 0x03);
 		device.write((byte) 0x03);
@@ -106,11 +114,7 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 		device.write((byte) (LCD_CLEARDISPLAY));
 		device.write((byte) (LCD_ENTRYMODESET | LCD_ENTRYLEFT));
 
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Thread.sleep(200);
 	}    
     
 	@Override
@@ -135,7 +139,8 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 	@Override
 	public void write(byte data) {
 		try{
-			write(data, (byte) 1);
+			byte modeRS = 0x01;	// Data
+			write(data, modeRS);
 		} catch (Exception ex) {
 			Logger.getLogger(NewI2CLcdDisplay.class.getName()).log(Level.SEVERE, null, ex);
 		}	
@@ -147,7 +152,8 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 	 */
 	public void writeCommand(byte cmd) {
 		try {
-			write(cmd, (byte) 0);
+			byte modeRS = 0x00; // Command
+			write(cmd, modeRS);
 		} catch (Exception ex) {
 			Logger.getLogger(NewI2CLcdDisplay.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -159,8 +165,9 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 	 * @param value
 	 * @param modeRS 0: Command, 1: Data
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */
-	private void write(byte value, byte modeRS) throws IOException {
+	private void write(byte value, byte modeRS) throws IOException, InterruptedException {
 		byte higherFourBits = (byte)(modeRS | (value & 0xF0) | LCD_BACKLIGHT);
 		device.write(higherFourBits);
 		strobe(higherFourBits);
@@ -174,30 +181,22 @@ public class NewI2CLcdDisplay extends LCDBase implements LCD {
 	 * Clocks EN to latch command
 	 * @param data
 	 * @throws IOException
+	 * @throws InterruptedException 
 	 */
-	public void strobe(byte data) throws IOException {
+	public void strobe(byte data) throws IOException, InterruptedException {
 		device.write((byte) (data | En | LCD_BACKLIGHT));
-		try {
-			Thread.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		Thread.sleep(5);
+		
 		device.write((byte) ((data & ~En) | LCD_BACKLIGHT));
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Thread.sleep(1);
 	}
 	
 	/**
 	 * Turn on/off the Backlight.
-	 * @param state
+	 * @param state true = on, false = off
 	 * @throws IOException
 	 */
 	public void backlight(boolean state) throws IOException {
-		// for state, true = on, false = off
 		if (state) {
 			device.write((byte) LCD_BACKLIGHT);
 		} else {
