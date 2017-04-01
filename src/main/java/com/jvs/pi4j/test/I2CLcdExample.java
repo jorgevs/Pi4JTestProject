@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import com.jvs.pi4j.extension.NewI2CLcdDisplay;
 import com.pi4j.component.lcd.LCDTextAlignment;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
@@ -17,10 +15,8 @@ public class I2CLcdExample {
     public final static int LCD_COLUMNS = 16;
 	
 	public static void main(String args[]) throws UnsupportedBusNumberException, IOException, InterruptedException {
-		
 		System.out.println("<--Pi4J--> I2C LCD Display example program");
-		
-		NewI2CLcdDisplay lcd = new NewI2CLcdDisplay(LCD_ROWS, LCD_COLUMNS, I2CBus.BUS_1, NewI2CLcdDisplay.PCAF8574_0x20);
+		NewI2CLcdDisplay lcd = new NewI2CLcdDisplay(LCD_ROWS, LCD_COLUMNS, I2CBus.BUS_1, NewI2CLcdDisplay.PCA8574_0x20);
 		
 		lcd.backlight(true);
 		lcd.clear();
@@ -46,9 +42,6 @@ public class I2CLcdExample {
 		lcd.write("Hello world mundo mundial y que lo sepa todo el mundo!!!");
 		Thread.sleep(1000);
 		
-		// create gpio controller
-        final GpioController gpio = GpioFactory.getInstance();
-        
     	// clear LCD
         lcd.clear();
         Thread.sleep(1000);

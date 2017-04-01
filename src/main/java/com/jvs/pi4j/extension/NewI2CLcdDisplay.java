@@ -13,9 +13,9 @@ import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
 public class NewI2CLcdDisplay extends LCDBase implements LCD {
 
-	public static final int PCAF8574_0x20 = 0x20; // 000
-	public static final int PCAF8574_0x21 = 0x21; // 001
-	public static final int PCAF8574_0x22 = 0x22; // 010
+	public static final int PCA8574_0x20 = 0x20; // 000
+	public static final int PCA8574_0x21 = 0x21; // 001
+	public static final int PCA8574_0x22 = 0x22; // 010
 	
 	// commands
 	private static final int LCD_CLEARDISPLAY = 0x01;
