@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.pi4j.component.lcd.LCD;
 import com.pi4j.component.lcd.LCDBase;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
-public class NewI2CLcdDisplay extends LCDBase implements LCD {
+public class NewI2CLcdDisplay extends LCDBase {
 
 	public static final int PCA8574_0x20 = 0x20; // 000
 	public static final int PCA8574_0x21 = 0x21; // 001
