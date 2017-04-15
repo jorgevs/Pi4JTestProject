@@ -59,4 +59,32 @@ public class I2CArduinoUno extends ArduinoBase {
 		return value;
 	}
 
+	public AnalogJoystick readAnalogJoystick() throws IOException {
+		byte[] buf = new byte[256];
+		int res = device.read(0, buf, 0, 3);
+
+		if (res != 3) {
+			throw new RuntimeException("Read failure: Got only " + res + " bytes from I2CArduinoUno");
+		}
+
+		AnalogJoystick ret = new AnalogJoystick();
+		ret.x = asInt(buf[0]);
+		ret.y = asInt(buf[1]);
+		ret.sw = asInt(buf[2]);
+		return ret;
+	}
+
+	private int asInt(byte b) {
+		int i = b;
+		if (i < 0) {
+			i = i + 256;
+		}
+		return i;
+	}
+
+	public static class AnalogJoystick {
+		public int x;
+		public int y;
+		public int sw;
+	}
 }

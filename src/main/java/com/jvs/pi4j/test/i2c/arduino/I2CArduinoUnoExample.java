@@ -1,4 +1,4 @@
-package com.jvs.pi4j.test;
+package com.jvs.pi4j.test.i2c.arduino;
 
 import java.io.IOException;
 
