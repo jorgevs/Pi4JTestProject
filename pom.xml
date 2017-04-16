@@ -99,7 +99,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.jvs.pi4j.test.I2CArduinoUnoExample</mainClass>
+							<mainClass>com.jvs.pi4j.test.i2c.arduino.I2CArduinoUnoJoystickExample</mainClass>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>dependency-jars/</classpathPrefix>
 						</manifest>

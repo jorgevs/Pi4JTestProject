@@ -33,8 +33,8 @@ public class I2CArduinoUnoJoystickExample {
 			console.println("\tValue Y received = " + analogJoystick.y);
 			console.println("\tValue SW received = " + analogJoystick.sw);
 			i++;
-			Thread.sleep(100);
-		} while (i < 200);
+			Thread.sleep(10);
+		} while (i < 2000);
 
 		console.println("Exiting...");
 	}
